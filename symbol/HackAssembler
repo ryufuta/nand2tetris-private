@@ -26,8 +26,7 @@ class HackAssembler
   def run_first_pass
     # add label symbols to the symbol table
     line_number = -1
-    while @parser.has_more_lines?
-      @parser.advance
+    each_instruction do
       if @parser.instruction_type == :L_INSTRUCTION
         @symbol_table.add_entry(@parser.symbol, line_number + 1)
       else
@@ -39,8 +38,7 @@ class HackAssembler
   def run_second_pass
     # translate instructions to binary code
     binary_codes = []
-    while @parser.has_more_lines?
-      @parser.advance
+    each_instruction do
       case @parser.instruction_type
       when :A_INSTRUCTION
         binary_codes << translate_a_instruction
@@ -49,6 +47,13 @@ class HackAssembler
       end
     end
     binary_codes
+  end
+
+  def each_instruction
+    while @parser.has_more_lines?
+      @parser.advance
+      yield
+    end
   end
 
   def translate_a_instruction
