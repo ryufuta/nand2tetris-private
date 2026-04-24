@@ -1,0 +1,41 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require_relative 'lib/parser'
+require_relative 'lib/code'
+
+class HackAssembler
+  def initialize(input_file_path)
+    @parser = Parser.new(input_file_path)
+    @code = Code.new
+    @output_file_path = input_file_path.sub(/\.asm$/, '.hack')
+  end
+
+  def assemble
+    binary_codes = []
+    while @parser.has_more_lines?
+      @parser.advance
+      binary_codes << translate_instruction
+    end
+
+    File.write(@output_file_path, binary_codes.join("\n"))
+  end
+
+  private
+
+  def translate_instruction
+    case @parser.instruction_type
+    when :A_INSTRUCTION
+      @parser.symbol.to_i.to_s(2).rjust(16, '0')
+    when :C_INSTRUCTION
+      comp = @code.comp(@parser.comp)
+      dest = @code.dest(@parser.dest)
+      jump = @code.jump(@parser.jump)
+      "111#{comp}#{dest}#{jump}"
+    end
+  end
+end
+
+if __FILE__ == $PROGRAM_NAME
+  HackAssembler.new(ARGV[0]).assemble
+end

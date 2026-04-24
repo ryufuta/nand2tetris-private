@@ -1,0 +1,65 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require_relative 'lib/parser'
+require_relative 'lib/code'
+require_relative 'lib/symbol_table'
+
+class HackAssembler
+  def initialize(input_file_path)
+    @parser = Parser.new(input_file_path)
+    @code = Code.new
+    @symbol_table = SymbolTable.new
+    @output_file_path = input_file_path.sub(/\.asm$/, '.hack')
+  end
+
+  def assemble
+    # first pass: add label symbols to the symbol table
+    line_number = -1
+    while @parser.has_more_lines?
+      @parser.advance
+      if @parser.instruction_type == :L_INSTRUCTION
+        @symbol_table.add_entry(@parser.symbol, line_number + 1)
+      else
+        line_number += 1
+      end
+    end
+
+    @parser.reset
+
+    # second pass: translate instructions to binary code
+    max_address = 15
+    binary_codes = []
+    while @parser.has_more_lines?
+      @parser.advance
+      case @parser.instruction_type
+      when :A_INSTRUCTION
+        symbol = @parser.symbol
+        address =
+          if symbol.match?(/^\d+$/)
+            symbol.to_i
+          else
+            if @symbol_table.contains?(symbol)
+              @symbol_table.get_address(symbol)
+            else
+              max_address += 1
+              @symbol_table.add_entry(symbol, max_address)
+              max_address
+            end
+          end
+        binary_codes << address.to_s(2).rjust(16, '0')
+      when :C_INSTRUCTION
+        comp = @code.comp(@parser.comp)
+        dest = @code.dest(@parser.dest)
+        jump = @code.jump(@parser.jump)
+        binary_codes << "111#{comp}#{dest}#{jump}"
+      end
+    end
+
+    File.write(@output_file_path, binary_codes.join("\n"))
+  end
+end
+
+if __FILE__ == $PROGRAM_NAME
+  HackAssembler.new(ARGV[0]).assemble
+end
