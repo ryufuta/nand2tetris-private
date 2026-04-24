@@ -10,6 +10,7 @@ class HackAssembler
     @parser = Parser.new(input_file_path)
     @code = Code.new
     @symbol_table = SymbolTable.new
+    @next_variable_address = 16
     @output_file_path = input_file_path.sub(/\.asm$/, '.hack')
   end
 
@@ -37,34 +38,41 @@ class HackAssembler
 
   def run_second_pass
     # translate instructions to binary code
-    max_address = 15
     binary_codes = []
     while @parser.has_more_lines?
       @parser.advance
       case @parser.instruction_type
       when :A_INSTRUCTION
-        symbol = @parser.symbol
-        address =
-          if symbol.match?(/^\d+$/)
-            symbol.to_i
-          else
-            if @symbol_table.contains?(symbol)
-              @symbol_table.get_address(symbol)
-            else
-              max_address += 1
-              @symbol_table.add_entry(symbol, max_address)
-              max_address
-            end
-          end
-        binary_codes << address.to_s(2).rjust(16, '0')
+        binary_codes << translate_a_instruction
       when :C_INSTRUCTION
-        comp = @code.comp(@parser.comp)
-        dest = @code.dest(@parser.dest)
-        jump = @code.jump(@parser.jump)
-        binary_codes << "111#{comp}#{dest}#{jump}"
+        binary_codes << translate_c_instruction
       end
     end
     binary_codes
+  end
+
+  def translate_a_instruction
+    symbol = @parser.symbol
+    address =
+      if symbol.match?(/^\d+$/)
+        symbol.to_i
+      else
+        if @symbol_table.contains?(symbol)
+          @symbol_table.get_address(symbol)
+        else
+          @symbol_table.add_entry(symbol, @next_variable_address)
+          @next_variable_address += 1
+          @next_variable_address - 1
+        end
+      end
+    address.to_s(2).rjust(16, '0')
+  end
+
+  def translate_c_instruction
+    comp = @code.comp(@parser.comp)
+    dest = @code.dest(@parser.dest)
+    jump = @code.jump(@parser.jump)
+    "111#{comp}#{dest}#{jump}"
   end
 end
 
