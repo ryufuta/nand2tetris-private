@@ -14,7 +14,16 @@ class HackAssembler
   end
 
   def assemble
-    # first pass: add label symbols to the symbol table
+    run_first_pass
+    @parser.reset
+    binary_codes = run_second_pass
+    File.write(@output_file_path, binary_codes.join("\n"))
+  end
+
+  private
+
+  def run_first_pass
+    # add label symbols to the symbol table
     line_number = -1
     while @parser.has_more_lines?
       @parser.advance
@@ -24,10 +33,10 @@ class HackAssembler
         line_number += 1
       end
     end
+  end
 
-    @parser.reset
-
-    # second pass: translate instructions to binary code
+  def run_second_pass
+    # translate instructions to binary code
     max_address = 15
     binary_codes = []
     while @parser.has_more_lines?
@@ -55,8 +64,7 @@ class HackAssembler
         binary_codes << "111#{comp}#{dest}#{jump}"
       end
     end
-
-    File.write(@output_file_path, binary_codes.join("\n"))
+    binary_codes
   end
 end
 
