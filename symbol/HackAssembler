@@ -54,7 +54,7 @@ class HackAssembler
   def translate_a_instruction
     symbol = @parser.symbol
     address =
-      if symbol.match?(/^\d+$/)
+      if numeric?(symbol)
         symbol.to_i
       else
         if @symbol_table.contains?(symbol)
@@ -73,6 +73,10 @@ class HackAssembler
     dest = @code.dest(@parser.dest)
     jump = @code.jump(@parser.jump)
     "111#{comp}#{dest}#{jump}"
+  end
+
+  def numeric?(symbol)
+    symbol.match?(/^\d+$/)
   end
 end
 
