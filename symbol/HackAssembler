@@ -52,19 +52,7 @@ class HackAssembler
   end
 
   def translate_a_instruction
-    symbol = @parser.symbol
-    address =
-      if numeric?(symbol)
-        symbol.to_i
-      else
-        if @symbol_table.contains?(symbol)
-          @symbol_table.get_address(symbol)
-        else
-          @symbol_table.add_entry(symbol, @next_variable_address)
-          @next_variable_address += 1
-          @next_variable_address - 1
-        end
-      end
+    address = resolve_address(@parser.symbol)
     address.to_s(2).rjust(16, '0')
   end
 
@@ -75,8 +63,25 @@ class HackAssembler
     "111#{comp}#{dest}#{jump}"
   end
 
+  def resolve_address(symbol)
+    return symbol.to_i if numeric?(symbol)
+
+    if @symbol_table.contains?(symbol)
+      @symbol_table.get_address(symbol)
+    else
+      allocate_variable(symbol)
+    end
+  end
+
   def numeric?(symbol)
     symbol.match?(/^\d+$/)
+  end
+
+  def allocate_variable(symbol)
+    address = @next_variable_address
+    @symbol_table.add_entry(symbol, address)
+    @next_variable_address += 1
+    address
   end
 end
 
