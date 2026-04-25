@@ -2,3 +2,4 @@
 ./basic/HackAssembler ./data/MaxL.asm
 ./basic/HackAssembler ./data/RectL.asm
 ./basic/HackAssembler ./data/PongL.asm
+./basic/HackAssembler ./data/CommentLast.asm
