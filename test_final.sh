@@ -5,4 +5,3 @@
 ./final/HackAssembler ./data/Max.asm
 ./final/HackAssembler ./data/Rect.asm
 ./final/HackAssembler ./data/Pong.asm
-./final/HackAssembler ./data/CommentLast.asm

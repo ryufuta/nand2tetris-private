@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Parser
+  # 最終行がコメントであるファイルには対応しない
+  # この場合に対応するには`instruction_type`メソッドがいずれの命令でもないパターンにも対応する必要があり本書のAPIに違反する
   def initialize(file_path)
     @lines = File.readlines(file_path).map(&:chomp)
     @index = -1
