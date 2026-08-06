@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require_relative 'lib/parser'
+require_relative 'lib/code_writer'
+
+class VMTranslator
+  def initialize(file_path)
+    @parser = Parser.new(file_path)
+    @code_writer = CodeWriter.new(file_path.sub(/\.vm$/, '.asm'))
+  end
+
+  def translate
+
+  end
+end
+
+if __FILE__ == $PROGRAM_NAME
+  VMTranslator.new(ARGV[0]).translate
+end

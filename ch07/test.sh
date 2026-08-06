@@ -1,0 +1,1 @@
+./VMTranslator ./data/SimpleAdd.vm
