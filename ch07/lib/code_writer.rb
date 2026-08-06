@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
 class CodeWriter
-  TABLE = {
+  AL_TABLE = {
     'add' => 'D+M',
     'sub' => 'M-D',
     'and' => 'D&M',
     'or' => 'D|M',
+    'neg' => '-M',
+    'not' => '!M',
   }.freeze
 
   def initialize(file_path)
@@ -21,7 +23,7 @@ class CodeWriter
         A=M-1
         D=M
         A=A-1
-        M=#{TABLE[command]}
+        M=#{AL_TABLE[command]}
         @SP
         M=M-1
       ASM
@@ -47,8 +49,12 @@ class CodeWriter
         M=M-1
       ASM
       @next_label_index += 1
-    else
-      asm = '// To be Implemented'
+    when 'neg', 'not'
+      asm = <<~ASM
+        @SP
+        A=M-1
+        M=#{AL_TABLE[command]}
+      ASM
     end
     @file.puts(asm)
   end
