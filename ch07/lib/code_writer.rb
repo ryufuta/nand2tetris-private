@@ -18,7 +18,7 @@ class CodeWriter
         @SP
         M=M-1
       ASM
-    when 'eq'
+    when 'eq', 'lt', 'gt'
       asm = <<~ASM
         @SP
         A=M-1
@@ -26,16 +26,16 @@ class CodeWriter
         A=A-1
         D=M-D
         M=0
-        @EQ_TRUE#{@next_label_index}
-        D;JEQ
-        @EQ_END#{@next_label_index}
+        @COMPARE_TRUE#{@next_label_index}
+        D;J#{command.upcase}
+        @COMPARE_END#{@next_label_index}
         0;JMP
-        (EQ_TRUE#{@next_label_index})
+        (COMPARE_TRUE#{@next_label_index})
         @SP
         A=M-1
         A=A-1
         M=-1
-        (EQ_END#{@next_label_index})
+        (COMPARE_END#{@next_label_index})
         @SP
         M=M-1
       ASM
