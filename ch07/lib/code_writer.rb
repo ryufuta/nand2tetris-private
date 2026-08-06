@@ -1,6 +1,13 @@
 # frozen_string_literal: true
 
 class CodeWriter
+  TABLE = {
+    'add' => 'D+M',
+    'sub' => 'M-D',
+    'and' => 'D&M',
+    'or' => 'D|M',
+  }.freeze
+
   def initialize(file_path)
     @file = File.open(file_path, 'w')
     @next_label_index = 0
@@ -8,13 +15,13 @@ class CodeWriter
 
   def write_arithmetic(command)
     case command
-    when 'add'
+    when 'add', 'sub', 'and', 'or'
       asm = <<~ASM
         @SP
         A=M-1
         D=M
         A=A-1
-        M=D+M
+        M=#{TABLE[command]}
         @SP
         M=M-1
       ASM
