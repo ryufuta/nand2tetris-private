@@ -1,4 +1,3 @@
-// push constant 17
 @17
 D=A
 @SP
@@ -6,7 +5,6 @@ A=M
 M=D
 @SP
 M=M+1
-// push constant 17
 @17
 D=A
 @SP
@@ -14,36 +12,24 @@ A=M
 M=D
 @SP
 M=M+1
-// eq
-  // yを取り出す
 @SP
 A=M-1
 D=M
-  // xを取り出してx-yを計算
 A=A-1
 D=M-D
-  // xの位置にfalseを代入
 M=0
-  // if (x-y == 0) goto EQ_TRUE0
 @EQ_TRUE0
 D;JEQ
-  // else goto EQ_END0
 @EQ_END0
 0;JMP
-
 (EQ_TRUE0)
-  // xの位置にtrueを代入
 @SP
 A=M-1
 A=A-1
 M=-1
-
 (EQ_END0)
-  // SP--
 @SP
 M=M-1
-
-// push constant 17
 @17
 D=A
 @SP
@@ -51,7 +37,6 @@ A=M
 M=D
 @SP
 M=M+1
-// push constant 16
 @16
 D=A
 @SP
@@ -59,7 +44,6 @@ A=M
 M=D
 @SP
 M=M+1
-// eq
 @SP
 A=M-1
 D=M
@@ -78,7 +62,6 @@ M=-1
 (EQ_END1)
 @SP
 M=M-1
-// push constant 16
 @16
 D=A
 @SP
@@ -86,7 +69,6 @@ A=M
 M=D
 @SP
 M=M+1
-// push constant 17
 @17
 D=A
 @SP
@@ -94,7 +76,6 @@ A=M
 M=D
 @SP
 M=M+1
-// eq
 @SP
 A=M-1
 D=M
@@ -113,3 +94,143 @@ M=-1
 (EQ_END2)
 @SP
 M=M-1
+@892
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+@891
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// To be Implemented
+@891
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+@892
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// To be Implemented
+@891
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+@891
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// To be Implemented
+@32767
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+@32766
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// To be Implemented
+@32766
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+@32767
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// To be Implemented
+@32766
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+@32766
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// To be Implemented
+@57
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+@31
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+@53
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+@SP
+A=M-1
+D=M
+A=A-1
+M=D+M
+@SP
+M=M-1
+@112
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// To be Implemented
+// To be Implemented
+// To be Implemented
+@82
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// To be Implemented
+// To be Implemented
+(END)
+@END
+0;JMP
