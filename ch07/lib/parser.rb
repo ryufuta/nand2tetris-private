@@ -21,8 +21,12 @@ class Parser
     case current_line.split(' ').first
     when 'push'
       :C_PUSH
+    when 'pop'
+      :C_POP
     when 'add', 'sub', 'neg', 'eq', 'gt', 'lt', 'and', 'or', 'not'
       :C_ARITHMETIC
+    else
+      raise "unknown command: #{current_line.split(' ').first}"
     end
   end
 

@@ -60,16 +60,28 @@ class CodeWriter
   end
 
   def write_push_pop(command, segment, index)
-    # push constant
-    asm = <<~ASM
-      @#{index}
-      D=A
-      @SP
-      A=M
-      M=D
-      @SP
-      M=M+1
-    ASM
+    case command
+    when :C_PUSH
+      if segment == 'constant'
+        asm = <<~ASM
+          @#{index}
+          D=A
+          @SP
+          A=M
+          M=D
+          @SP
+          M=M+1
+        ASM
+      else
+        asm = '// push: To be implemented'
+      end
+    when :C_POP
+      if segment == 'local'
+        asm = '// pop local: To be implemented'
+      else
+        asm = '// pop: To be implemented'
+      end
+    end
     @file.puts(asm)
   end
 
