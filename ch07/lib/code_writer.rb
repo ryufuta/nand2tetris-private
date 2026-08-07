@@ -25,43 +25,12 @@ class CodeWriter
   def write_arithmetic(command)
     case command
     when 'add', 'sub', 'and', 'or'
-      asm = <<~ASM
-        @SP
-        A=M-1
-        D=M
-        A=A-1
-        M=#{AL_TABLE[command]}
-        @SP
-        M=M-1
-      ASM
+      asm = translate_binary_al(command)
     when 'eq', 'lt', 'gt'
-      asm = <<~ASM
-        @SP
-        A=M-1
-        D=M
-        A=A-1
-        D=M-D
-        M=0
-        @COMPARE_TRUE#{@next_label_index}
-        D;J#{command.upcase}
-        @COMPARE_END#{@next_label_index}
-        0;JMP
-        (COMPARE_TRUE#{@next_label_index})
-        @SP
-        A=M-1
-        A=A-1
-        M=-1
-        (COMPARE_END#{@next_label_index})
-        @SP
-        M=M-1
-      ASM
+      asm = translate_comparison(command)
       @next_label_index += 1
     when 'neg', 'not'
-      asm = <<~ASM
-        @SP
-        A=M-1
-        M=#{AL_TABLE[command]}
-      ASM
+      asm = translate_unary_al(command)
     end
     @file.puts(asm)
   end
@@ -150,5 +119,50 @@ class CodeWriter
     ASM
     @file.puts(asm)
     @file.close
+  end
+
+  private
+
+  def translate_binary_al(command)
+    <<~ASM
+      @SP
+      A=M-1
+      D=M
+      A=A-1
+      M=#{AL_TABLE[command]}
+      @SP
+      M=M-1
+    ASM
+  end
+
+  def translate_unary_al(command)
+    <<~ASM
+      @SP
+      A=M-1
+      M=#{AL_TABLE[command]}
+    ASM
+  end
+
+  def translate_comparison(command)
+    <<~ASM
+      @SP
+      A=M-1
+      D=M
+      A=A-1
+      D=M-D
+      M=0
+      @COMPARE_TRUE#{@next_label_index}
+      D;J#{command.upcase}
+      @COMPARE_END#{@next_label_index}
+      0;JMP
+      (COMPARE_TRUE#{@next_label_index})
+      @SP
+      A=M-1
+      A=A-1
+      M=-1
+      (COMPARE_END#{@next_label_index})
+      @SP
+      M=M-1
+    ASM
   end
 end
