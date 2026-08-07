@@ -116,11 +116,7 @@ class CodeWriter
     <<~ASM
       @#{index}
       D=A
-      @SP
-      A=M
-      M=D
-      @SP
-      M=M+1
+      #{push_d}
     ASM
   end
 
@@ -131,11 +127,7 @@ class CodeWriter
       @#{SYMBOL_TABLE[segment]}
       A=D+M
       D=M
-      @SP
-      A=M
-      M=D
-      @SP
-      M=M+1
+      #{push_d}
     ASM
   end
 
@@ -143,11 +135,7 @@ class CodeWriter
     <<~ASM
       @R#{5+index}
       D=M
-      @SP
-      A=M
-      M=D
-      @SP
-      M=M+1
+      #{push_d}
     ASM
   end
 
@@ -155,11 +143,7 @@ class CodeWriter
     <<~ASM
       @R#{3+index}
       D=M
-      @SP
-      A=M
-      M=D
-      @SP
-      M=M+1
+      #{push_d}
     ASM
   end
 
@@ -167,11 +151,7 @@ class CodeWriter
     <<~ASM
       @#{@file_name}.#{index}
       D=M
-      @SP
-      A=M
-      M=D
-      @SP
-      M=M+1
+      #{push_d}
     ASM
   end
 
@@ -211,6 +191,17 @@ class CodeWriter
       #{pop_to_d}
       @#{@file_name}.#{index}
       M=D
+    ASM
+  end
+
+  def push_d
+    # RAM[SP++]=D
+    <<~ASM.chomp
+      @SP
+      A=M
+      M=D
+      @SP
+      M=M+1
     ASM
   end
 
