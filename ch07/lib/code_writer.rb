@@ -81,12 +81,10 @@ class CodeWriter
   def translate_binary_al(command)
     <<~ASM
       @SP
-      A=M-1
+      AM=M-1
       D=M
       A=A-1
       M=#{AL_TABLE[command]}
-      @SP
-      M=M-1
     ASM
   end
 

@@ -55,12 +55,10 @@ M=D
 @SP
 M=M+1
 @SP
-A=M-1
+AM=M-1
 D=M
 A=A-1
 M=M-D
-@SP
-M=M-1
 @StaticTest.8
 D=M
 @SP
@@ -69,12 +67,10 @@ M=D
 @SP
 M=M+1
 @SP
-A=M-1
+AM=M-1
 D=M
 A=A-1
 M=D+M
-@SP
-M=M-1
 (END)
 @END
 0;JMP
