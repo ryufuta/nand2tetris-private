@@ -5,7 +5,13 @@ A=M
 M=D
 @SP
 M=M+1
-// pop: To be implemented
+@SP
+A=M-1
+D=M
+@R3
+M=D
+@SP
+M=M-1
 @3040
 D=A
 @SP
@@ -13,7 +19,13 @@ A=M
 M=D
 @SP
 M=M+1
-// pop: To be implemented
+@SP
+A=M-1
+D=M
+@R4
+M=D
+@SP
+M=M-1
 @32
 D=A
 @SP
@@ -56,8 +68,20 @@ A=M
 M=D
 @SP
 M=M-1
-// push: To be implemented
-// push: To be implemented
+@R3
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+@R4
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
 @SP
 A=M-1
 D=M

@@ -45,6 +45,8 @@ class CodeWriter
         asm = translate_push_seg_with_base_address(segment, index)
       when 'temp'
         asm = translate_push_temp(index)
+      when 'pointer'
+        asm = translate_push_pointer(index)
       else
         asm = '// push: To be implemented'
       end
@@ -54,6 +56,8 @@ class CodeWriter
         asm = translate_pop_seg_with_base_address(segment, index)
       when 'temp'
         asm = translate_pop_temp(index)
+      when 'pointer'
+        asm = translate_pop_pointer(index)
       else
         asm = '// pop: To be implemented'
       end
@@ -155,6 +159,18 @@ class CodeWriter
     ASM
   end
 
+  def translate_push_pointer(index)
+    <<~ASM
+      @R#{3+index}
+      D=M
+      @SP
+      A=M
+      M=D
+      @SP
+      M=M+1
+    ASM
+  end
+
   def translate_pop_seg_with_base_address(segment, index)
     <<~ASM
       @#{index}
@@ -180,6 +196,18 @@ class CodeWriter
       A=M-1
       D=M
       @R#{5+index}
+      M=D
+      @SP
+      M=M-1
+    ASM
+  end
+
+  def translate_pop_pointer(index)
+    <<~ASM
+      @SP
+      A=M-1
+      D=M
+      @R#{3+index}
       M=D
       @SP
       M=M-1
