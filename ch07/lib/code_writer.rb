@@ -10,6 +10,13 @@ class CodeWriter
     'not' => '!M',
   }.freeze
 
+  SYMBOL_TABLE = {
+    'local' => 'LCL',
+    'argument' => 'ARG',
+    'this' => 'THIS',
+    'that' => 'THAT',
+  }.freeze
+
   def initialize(file_path)
     @file = File.open(file_path, 'w')
     @next_label_index = 0
@@ -76,11 +83,12 @@ class CodeWriter
         asm = '// push: To be implemented'
       end
     when :C_POP
-      if segment == 'local'
+      case segment
+      when 'local', 'argument', 'this', 'that'
         asm = <<~ASM
           @#{index}
           D=A
-          @LCL
+          @#{SYMBOL_TABLE[segment]}
           D=D+M
           @R13
           M=D
