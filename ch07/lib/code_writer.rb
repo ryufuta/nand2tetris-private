@@ -77,7 +77,22 @@ class CodeWriter
       end
     when :C_POP
       if segment == 'local'
-        asm = '// pop local: To be implemented'
+        asm = <<~ASM
+          @#{index}
+          D=A
+          @LCL
+          D=D+M
+          @R13
+          M=D
+          @SP
+          A=M-1
+          D=M
+          @R13
+          A=M
+          M=D
+          @SP
+          M=M-1
+        ASM
       else
         asm = '// pop: To be implemented'
       end

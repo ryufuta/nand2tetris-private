@@ -5,25 +5,18 @@ A=M
 M=D
 @SP
 M=M+1
-// pop local 0
-// RAM[LCL+i]にスタック最上位の値を代入, SPをディクリメント
-  // LCL+i
 @0
 D=A
 @LCL
 D=D+M
-  // 仮想レジスタにLCL+iを退避
 @R13
 M=D
-  // スタック最上位の値を取得
 @SP
 A=M-1
 D=M
-  // RAM[LCL+i] = D
 @R13
 A=M
 M=D
-  // SP--
 @SP
 M=M-1
 @21
