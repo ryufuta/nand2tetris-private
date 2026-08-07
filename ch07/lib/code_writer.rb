@@ -101,6 +101,16 @@ class CodeWriter
           @SP
           M=M-1
         ASM
+      when 'temp'
+        asm = <<~ASM
+          @SP
+          A=M-1
+          D=M
+          @R#{5+index}
+          M=D
+          @SP
+          M=M-1
+        ASM
       else
         asm = '// pop: To be implemented'
       end

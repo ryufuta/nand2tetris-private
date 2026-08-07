@@ -131,7 +131,13 @@ A=M
 M=D
 @SP
 M=M+1
-// pop: To be implemented
+@SP
+A=M-1
+D=M
+@R11
+M=D
+@SP
+M=M-1
 // push: To be implemented
 // push: To be implemented
 @SP
