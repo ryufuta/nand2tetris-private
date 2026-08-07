@@ -37,32 +37,32 @@ class CodeWriter
   end
 
   def write_push_pop(command, segment, index)
-    case command
-    when :C_PUSH
-      case segment
-      when 'constant'
-        asm = translate_push_constant(index)
-      when 'local', 'argument', 'this', 'that'
-        asm = translate_push_seg_with_base_address(segment, index)
-      when 'temp'
-        asm = translate_push_temp(index)
-      when 'pointer'
-        asm = translate_push_pointer(index)
-      when 'static'
-        asm = translate_push_static(index)
-      end
-    when :C_POP
-      case segment
-      when 'local', 'argument', 'this', 'that'
-        asm = translate_pop_seg_with_base_address(segment, index)
-      when 'temp'
-        asm = translate_pop_temp(index)
-      when 'pointer'
-        asm = translate_pop_pointer(index)
-      when 'static'
-        asm = translate_pop_static(index)
-      end
-    end
+    asm = case command
+          when :C_PUSH
+            case segment
+            when 'constant'
+              translate_push_constant(index)
+            when 'local', 'argument', 'this', 'that'
+              translate_push_seg_with_base_address(segment, index)
+            when 'temp'
+              translate_push_temp(index)
+            when 'pointer'
+              translate_push_pointer(index)
+            when 'static'
+              translate_push_static(index)
+            end
+          when :C_POP
+            case segment
+            when 'local', 'argument', 'this', 'that'
+              translate_pop_seg_with_base_address(segment, index)
+            when 'temp'
+              translate_pop_temp(index)
+            when 'pointer'
+              translate_pop_pointer(index)
+            when 'static'
+              translate_pop_static(index)
+            end
+          end
     @file.puts(asm)
   end
 
