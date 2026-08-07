@@ -99,7 +99,7 @@ class CodeWriter
   def translate_comparison(command)
     <<~ASM
       @SP
-      A=M-1
+      AM=M-1
       D=M
       A=A-1
       D=M-D
@@ -111,11 +111,8 @@ class CodeWriter
       (COMPARE_TRUE#{@next_label_index})
       @SP
       A=M-1
-      A=A-1
       M=-1
       (COMPARE_END#{@next_label_index})
-      @SP
-      M=M-1
     ASM
   end
 
