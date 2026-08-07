@@ -80,9 +80,7 @@ class CodeWriter
 
   def translate_binary_al(command)
     <<~ASM
-      @SP
-      AM=M-1
-      D=M
+      #{pop_to_d}
       A=A-1
       M=#{AL_TABLE[command]}
     ASM
@@ -98,9 +96,7 @@ class CodeWriter
 
   def translate_comparison(command)
     <<~ASM
-      @SP
-      AM=M-1
-      D=M
+      #{pop_to_d}
       A=A-1
       D=M-D
       M=0
@@ -187,9 +183,7 @@ class CodeWriter
       D=D+M
       @R13
       M=D
-      @SP
-      AM=M-1
-      D=M
+      #{pop_to_d}
       @R13
       A=M
       M=D
@@ -198,9 +192,7 @@ class CodeWriter
 
   def translate_pop_temp(index)
     <<~ASM
-      @SP
-      AM=M-1
-      D=M
+      #{pop_to_d}
       @R#{5+index}
       M=D
     ASM
@@ -208,9 +200,7 @@ class CodeWriter
 
   def translate_pop_pointer(index)
     <<~ASM
-      @SP
-      AM=M-1
-      D=M
+      #{pop_to_d}
       @R#{3+index}
       M=D
     ASM
@@ -218,11 +208,18 @@ class CodeWriter
 
   def translate_pop_static(index)
     <<~ASM
+      #{pop_to_d}
+      @#{@file_name}.#{index}
+      M=D
+    ASM
+  end
+
+  def pop_to_d
+    # D=RAM[--SP]
+    <<~ASM.chomp
       @SP
       AM=M-1
       D=M
-      @#{@file_name}.#{index}
-      M=D
     ASM
   end
 end
