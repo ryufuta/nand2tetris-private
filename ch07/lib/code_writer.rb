@@ -69,10 +69,34 @@ class CodeWriter
   def write_push_pop(command, segment, index)
     case command
     when :C_PUSH
-      if segment == 'constant'
+      case segment
+      when 'constant'
         asm = <<~ASM
           @#{index}
           D=A
+          @SP
+          A=M
+          M=D
+          @SP
+          M=M+1
+        ASM
+      when 'local', 'argument', 'this', 'that'
+        asm = <<~ASM
+          @#{index}
+          D=A
+          @#{SYMBOL_TABLE[segment]}
+          A=D+M
+          D=M
+          @SP
+          A=M
+          M=D
+          @SP
+          M=M+1
+        ASM
+      when 'temp'
+        asm = <<~ASM
+          @R#{5+index}
+          D=M
           @SP
           A=M
           M=D

@@ -138,8 +138,26 @@ D=M
 M=D
 @SP
 M=M-1
-// push: To be implemented
-// push: To be implemented
+@0
+D=A
+@LCL
+A=D+M
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+@5
+D=A
+@THAT
+A=D+M
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
 @SP
 A=M-1
 D=M
@@ -147,7 +165,16 @@ A=A-1
 M=D+M
 @SP
 M=M-1
-// push: To be implemented
+@1
+D=A
+@ARG
+A=D+M
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
 @SP
 A=M-1
 D=M
@@ -155,8 +182,26 @@ A=A-1
 M=M-D
 @SP
 M=M-1
-// push: To be implemented
-// push: To be implemented
+@6
+D=A
+@THIS
+A=D+M
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+@6
+D=A
+@THIS
+A=D+M
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
 @SP
 A=M-1
 D=M
@@ -171,7 +216,13 @@ A=A-1
 M=M-D
 @SP
 M=M-1
-// push: To be implemented
+@R11
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
 @SP
 A=M-1
 D=M
