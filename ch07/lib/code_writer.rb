@@ -20,6 +20,7 @@ class CodeWriter
   def initialize(file_path)
     @file = File.open(file_path, 'w')
     @next_label_index = 0
+    @file_name = File.basename(file_path, '.asm')
   end
 
   def write_arithmetic(command)
@@ -47,8 +48,8 @@ class CodeWriter
         asm = translate_push_temp(index)
       when 'pointer'
         asm = translate_push_pointer(index)
-      else
-        asm = '// push: To be implemented'
+      when 'static'
+        asm = translate_push_static(index)
       end
     when :C_POP
       case segment
@@ -58,8 +59,8 @@ class CodeWriter
         asm = translate_pop_temp(index)
       when 'pointer'
         asm = translate_pop_pointer(index)
-      else
-        asm = '// pop: To be implemented'
+      when 'static'
+        asm = translate_pop_static(index)
       end
     end
     @file.puts(asm)
@@ -171,6 +172,18 @@ class CodeWriter
     ASM
   end
 
+  def translate_push_static(index)
+    <<~ASM
+      @#{@file_name}.#{index}
+      D=M
+      @SP
+      A=M
+      M=D
+      @SP
+      M=M+1
+    ASM
+  end
+
   def translate_pop_seg_with_base_address(segment, index)
     <<~ASM
       @#{index}
@@ -208,6 +221,18 @@ class CodeWriter
       A=M-1
       D=M
       @R#{3+index}
+      M=D
+      @SP
+      M=M-1
+    ASM
+  end
+
+  def translate_pop_static(index)
+    <<~ASM
+      @SP
+      A=M-1
+      D=M
+      @#{@file_name}.#{index}
       M=D
       @SP
       M=M-1
