@@ -188,49 +188,41 @@ class CodeWriter
       @R13
       M=D
       @SP
-      A=M-1
+      AM=M-1
       D=M
       @R13
       A=M
       M=D
-      @SP
-      M=M-1
     ASM
   end
 
   def translate_pop_temp(index)
     <<~ASM
       @SP
-      A=M-1
+      AM=M-1
       D=M
       @R#{5+index}
       M=D
-      @SP
-      M=M-1
     ASM
   end
 
   def translate_pop_pointer(index)
     <<~ASM
       @SP
-      A=M-1
+      AM=M-1
       D=M
       @R#{3+index}
       M=D
-      @SP
-      M=M-1
     ASM
   end
 
   def translate_pop_static(index)
     <<~ASM
       @SP
-      A=M-1
+      AM=M-1
       D=M
       @#{@file_name}.#{index}
       M=D
-      @SP
-      M=M-1
     ASM
   end
 end
