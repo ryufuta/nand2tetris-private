@@ -40,70 +40,20 @@ class CodeWriter
     when :C_PUSH
       case segment
       when 'constant'
-        asm = <<~ASM
-          @#{index}
-          D=A
-          @SP
-          A=M
-          M=D
-          @SP
-          M=M+1
-        ASM
+        asm = translate_push_constant(index)
       when 'local', 'argument', 'this', 'that'
-        asm = <<~ASM
-          @#{index}
-          D=A
-          @#{SYMBOL_TABLE[segment]}
-          A=D+M
-          D=M
-          @SP
-          A=M
-          M=D
-          @SP
-          M=M+1
-        ASM
+        asm = translate_push_seg_with_base_address(segment, index)
       when 'temp'
-        asm = <<~ASM
-          @R#{5+index}
-          D=M
-          @SP
-          A=M
-          M=D
-          @SP
-          M=M+1
-        ASM
+        asm = translate_push_temp(index)
       else
         asm = '// push: To be implemented'
       end
     when :C_POP
       case segment
       when 'local', 'argument', 'this', 'that'
-        asm = <<~ASM
-          @#{index}
-          D=A
-          @#{SYMBOL_TABLE[segment]}
-          D=D+M
-          @R13
-          M=D
-          @SP
-          A=M-1
-          D=M
-          @R13
-          A=M
-          M=D
-          @SP
-          M=M-1
-        ASM
+        asm = translate_pop_seg_with_base_address(segment, index)
       when 'temp'
-        asm = <<~ASM
-          @SP
-          A=M-1
-          D=M
-          @R#{5+index}
-          M=D
-          @SP
-          M=M-1
-        ASM
+        asm = translate_pop_temp(index)
       else
         asm = '// pop: To be implemented'
       end
@@ -161,6 +111,76 @@ class CodeWriter
       A=A-1
       M=-1
       (COMPARE_END#{@next_label_index})
+      @SP
+      M=M-1
+    ASM
+  end
+
+  def translate_push_constant(index)
+    <<~ASM
+      @#{index}
+      D=A
+      @SP
+      A=M
+      M=D
+      @SP
+      M=M+1
+    ASM
+  end
+
+  def translate_push_seg_with_base_address(segment, index)
+    <<~ASM
+      @#{index}
+      D=A
+      @#{SYMBOL_TABLE[segment]}
+      A=D+M
+      D=M
+      @SP
+      A=M
+      M=D
+      @SP
+      M=M+1
+    ASM
+  end
+
+  def translate_push_temp(index)
+    <<~ASM
+      @R#{5+index}
+      D=M
+      @SP
+      A=M
+      M=D
+      @SP
+      M=M+1
+    ASM
+  end
+
+  def translate_pop_seg_with_base_address(segment, index)
+    <<~ASM
+      @#{index}
+      D=A
+      @#{SYMBOL_TABLE[segment]}
+      D=D+M
+      @R13
+      M=D
+      @SP
+      A=M-1
+      D=M
+      @R13
+      A=M
+      M=D
+      @SP
+      M=M-1
+    ASM
+  end
+
+  def translate_pop_temp(index)
+    <<~ASM
+      @SP
+      A=M-1
+      D=M
+      @R#{5+index}
+      M=D
       @SP
       M=M-1
     ASM
