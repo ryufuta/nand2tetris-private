@@ -38,6 +38,10 @@ class CodeWriter
     @file_name = File.basename(file_path, '.asm')
   end
 
+  def set_file_name(file_name)
+    # TODO: 新しいVMファイルの変換が開始されたことを知らせる
+  end
+
   def write_arithmetic(command)
     case command
     when 'add', 'sub', 'and', 'or'
@@ -98,6 +102,18 @@ class CodeWriter
       @#{label}
       D;JNE
     ASM
+  end
+
+  def write_function(function_name, n_vars)
+    @file.puts('// TODO: implements function')
+  end
+
+  def write_call(function_name, n_args)
+    @file.puts('// TODO: implements call')
+  end
+
+  def write_return
+    @file.puts('// TODO: implements return')
   end
 
   def close
