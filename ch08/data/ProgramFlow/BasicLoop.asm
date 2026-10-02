@@ -16,7 +16,7 @@ D=M
 @R13
 A=M
 M=D
-// TODO: implement label
+(LOOP_START)
 @0
 D=A
 @ARG
@@ -93,7 +93,11 @@ D=M
 AM=M+1
 A=A-1
 M=D
-// TODO: implement if-goto
+@SP
+AM=M-1
+D=M
+@LOOP_START
+D;JNE
 @0
 D=A
 @LCL
