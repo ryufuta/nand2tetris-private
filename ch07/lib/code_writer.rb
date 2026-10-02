@@ -17,13 +17,12 @@ class CodeWriter
     'that' => 'THAT',
   }.freeze
 
-  # RAM[SP++]=D
+  # RAM[++SP - 1]=D
   PUSH_D = <<~ASM.chomp
     @SP
-    A=M
+    AM=M+1
+    A=A-1
     M=D
-    @SP
-    M=M+1
   ASM
 
   # D=RAM[--SP]
