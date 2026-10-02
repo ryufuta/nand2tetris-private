@@ -17,6 +17,22 @@ class CodeWriter
     'that' => 'THAT',
   }.freeze
 
+  # RAM[SP++]=D
+  PUSH_D = <<~ASM.chomp
+    @SP
+    A=M
+    M=D
+    @SP
+    M=M+1
+  ASM
+
+  # D=RAM[--SP]
+  POP_TO_D = <<~ASM.chomp
+    @SP
+    AM=M-1
+    D=M
+  ASM
+
   def initialize(file_path)
     @file = File.open(file_path, 'w')
     @next_label_index = 0
@@ -80,7 +96,7 @@ class CodeWriter
 
   def translate_binary_al(command)
     <<~ASM
-      #{pop_to_d}
+      #{POP_TO_D}
       A=A-1
       M=#{AL_TABLE[command]}
     ASM
@@ -96,7 +112,7 @@ class CodeWriter
 
   def translate_comparison(command)
     <<~ASM
-      #{pop_to_d}
+      #{POP_TO_D}
       A=A-1
       D=M-D
       M=0
@@ -116,7 +132,7 @@ class CodeWriter
     <<~ASM
       @#{index}
       D=A
-      #{push_d}
+      #{PUSH_D}
     ASM
   end
 
@@ -127,7 +143,7 @@ class CodeWriter
       @#{SYMBOL_TABLE[segment]}
       A=D+M
       D=M
-      #{push_d}
+      #{PUSH_D}
     ASM
   end
 
@@ -135,7 +151,7 @@ class CodeWriter
     <<~ASM
       @R#{5+index}
       D=M
-      #{push_d}
+      #{PUSH_D}
     ASM
   end
 
@@ -143,7 +159,7 @@ class CodeWriter
     <<~ASM
       @R#{3+index}
       D=M
-      #{push_d}
+      #{PUSH_D}
     ASM
   end
 
@@ -151,7 +167,7 @@ class CodeWriter
     <<~ASM
       @#{@file_name}.#{index}
       D=M
-      #{push_d}
+      #{PUSH_D}
     ASM
   end
 
@@ -163,7 +179,7 @@ class CodeWriter
       D=D+M
       @R13
       M=D
-      #{pop_to_d}
+      #{POP_TO_D}
       @R13
       A=M
       M=D
@@ -172,7 +188,7 @@ class CodeWriter
 
   def translate_pop_temp(index)
     <<~ASM
-      #{pop_to_d}
+      #{POP_TO_D}
       @R#{5+index}
       M=D
     ASM
@@ -180,7 +196,7 @@ class CodeWriter
 
   def translate_pop_pointer(index)
     <<~ASM
-      #{pop_to_d}
+      #{POP_TO_D}
       @R#{3+index}
       M=D
     ASM
@@ -188,29 +204,9 @@ class CodeWriter
 
   def translate_pop_static(index)
     <<~ASM
-      #{pop_to_d}
+      #{POP_TO_D}
       @#{@file_name}.#{index}
       M=D
-    ASM
-  end
-
-  def push_d
-    # RAM[SP++]=D
-    <<~ASM.chomp
-      @SP
-      A=M
-      M=D
-      @SP
-      M=M+1
-    ASM
-  end
-
-  def pop_to_d
-    # D=RAM[--SP]
-    <<~ASM.chomp
-      @SP
-      AM=M-1
-      D=M
     ASM
   end
 end
