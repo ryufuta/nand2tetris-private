@@ -95,7 +95,8 @@ AM=M-1
 D=M
 @COMPUTE_ELEMENT
 D;JNE
-// TODO: implement goto
+@END_PROGRAM
+0;JMP
 (COMPUTE_ELEMENT)
 @0
 D=A
@@ -186,7 +187,8 @@ D=M
 @R13
 A=M
 M=D
-// TODO: implement goto
+@MAIN_LOOP_START
+0;JMP
 (END_PROGRAM)
 (END)
 @END
