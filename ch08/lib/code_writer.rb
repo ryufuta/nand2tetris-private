@@ -82,8 +82,7 @@ class CodeWriter
   end
 
   def write_label(label)
-    asm = '// TODO: implement label'
-    @file.puts(asm)
+    @file.puts("(#{label})")
   end
 
   def write_goto(label)
@@ -92,8 +91,11 @@ class CodeWriter
   end
 
   def write_if(label)
-    asm = '// TODO: implement if-goto'
-    @file.puts(asm)
+    @file.puts(<<~ASM)
+      #{POP_TO_D}
+      @#{label}
+      D;JNE
+    ASM
   end
 
   def close
