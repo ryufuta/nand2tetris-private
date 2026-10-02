@@ -31,6 +31,12 @@ class Parser
       :C_GOTO
     when 'if-goto'
       :C_IF
+    when 'function'
+      :C_FUNCTION
+    when 'return'
+      :C_RETURN
+    when 'call'
+      :C_CALL
     else
       raise "unknown command: #{current_line.split(' ').first}"
     end
