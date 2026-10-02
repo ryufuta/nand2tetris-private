@@ -25,6 +25,12 @@ class Parser
       :C_POP
     when 'add', 'sub', 'neg', 'eq', 'gt', 'lt', 'and', 'or', 'not'
       :C_ARITHMETIC
+    when 'label'
+      :C_LABEL
+    when 'goto'
+      :C_GOTO
+    when 'if-goto'
+      :C_IF
     else
       raise "unknown command: #{current_line.split(' ').first}"
     end
