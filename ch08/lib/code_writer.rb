@@ -105,7 +105,20 @@ class CodeWriter
   end
 
   def write_function(function_name, n_vars)
-    @file.puts('// TODO: implements function')
+    asm = "(#{function_name})\n"
+    if n_vars > 0
+      asm += <<~ASM
+        @LCL
+        A=M
+        M=0
+      ASM
+
+      asm += <<~ASM * (n_vars - 1)
+        A=A+1
+        M=0
+      ASM
+    end
+    @file.puts(asm)
   end
 
   def write_call(function_name, n_args)
@@ -113,7 +126,58 @@ class CodeWriter
   end
 
   def write_return
-    @file.puts('// TODO: implements return')
+    @file.puts(<<~ASM)
+      @LCL
+      D=M
+      @R13
+      M=D
+      @5
+      D=A
+      @R13
+      A=M-D
+      D=M
+      @R14
+      M=D
+      @SP
+      AM=M-1
+      D=M
+      @ARG
+      A=M
+      M=D
+      @ARG
+      D=M+1
+      @SP
+      M=D
+      @R13
+      A=M-1
+      D=M
+      @THAT
+      M=D
+      @2
+      D=A
+      @R13
+      A=M-D
+      D=M
+      @THIS
+      M=D
+      @3
+      D=A
+      @R13
+      A=M-D
+      D=M
+      @ARG
+      M=D
+      @4
+      D=A
+      @R13
+      A=M-D
+      D=M
+      @LCL
+      M=D
+      @R14
+      A=M
+      0;JMP
+    ASM
   end
 
   def close
