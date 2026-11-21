@@ -149,28 +149,22 @@ class CodeWriter
       @SP
       M=D
       @R13
-      A=M-1
+      AM=M-1
       D=M
       @THAT
       M=D
-      @2
-      D=A
       @R13
-      A=M-D
+      AM=M-1
       D=M
       @THIS
       M=D
-      @3
-      D=A
       @R13
-      A=M-D
+      AM=M-1
       D=M
       @ARG
       M=D
-      @4
-      D=A
       @R13
-      A=M-D
+      AM=M-1
       D=M
       @LCL
       M=D
