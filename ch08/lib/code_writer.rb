@@ -32,10 +32,11 @@ class CodeWriter
     D=M
   ASM
 
-  def initialize(file_path)
+  def initialize(file_path, skip_bootstrap: false)
     @file = File.open(file_path, 'w')
     @next_label_index = 0
     @file_name = File.basename(file_path, '.asm')
+    write_bootstrap unless skip_bootstrap
   end
 
   def set_file_name(file_name)
@@ -185,6 +186,10 @@ class CodeWriter
   end
 
   private
+
+  def write_bootstrap
+    @file.puts('// TODO: implements bootstrap')
+  end
 
   def translate_binary_al(command)
     <<~ASM

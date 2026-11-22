@@ -5,41 +5,56 @@ require_relative 'lib/parser'
 require_relative 'lib/code_writer'
 
 class VMTranslator
-  def initialize(file_path)
-    @parser = Parser.new(file_path)
-    @code_writer = CodeWriter.new(file_path.sub(/\.vm$/, '.asm'))
+  def initialize(path)
+    if File.directory?(path)
+      @file_paths = Dir.glob(File.join(path, '*.vm')).sort_by do |file_path|
+        file_name = File.basename(file_path)
+        # 出力されるアセンブリコードの可読性と再現性のためSys.vmを最初にしてその他はアルファベット順に並び替える
+        [file_name == 'Sys.vm' ? 0 : 1, file_name]
+      end
+      @code_writer = CodeWriter.new("#{path}.asm")
+    else
+      # Sys.initが存在せずブートストラップコードが不要な単一ファイルのテストを引き続きパスさせるため
+      # 書籍のAPIにはない`skip_bootstrap`を追加
+      @file_paths = [path]
+      @code_writer = CodeWriter.new(path.sub(/\.vm$/, '.asm'), skip_bootstrap: true)
+    end
   end
 
   def translate
-    while @parser.has_more_lines?
-      @parser.advance
-      translate_command
+    @file_paths.each do |file_path|
+      parser = Parser.new(file_path)
+      @code_writer.set_file_name(File.basename(file_path, '.asm'))
+      while parser.has_more_lines?
+        parser.advance
+        translate_command(parser)
+      end
     end
     @code_writer.close
   end
 
   private
 
-  def translate_command
-    command_type = @parser.command_type
+  def translate_command(parser)
+    command_type = parser.command_type
     case command_type
     when :C_ARITHMETIC
-      command = @parser.arg1
+      command = parser.arg1
       @code_writer.write_arithmetic(command)
     when :C_PUSH, :C_POP
-      segment = @parser.arg1
-      index = @parser.arg2
+      segment = parser.arg1
+      index = parser.arg2
       @code_writer.write_push_pop(command_type, segment, index)
     when :C_LABEL
-      @code_writer.write_label(@parser.arg1)
+      @code_writer.write_label(parser.arg1)
     when :C_GOTO
-      @code_writer.write_goto(@parser.arg1)
+      @code_writer.write_goto(parser.arg1)
     when :C_IF
-      @code_writer.write_if(@parser.arg1)
+      @code_writer.write_if(parser.arg1)
     when :C_FUNCTION
-      @code_writer.write_function(@parser.arg1, @parser.arg2)
+      @code_writer.write_function(parser.arg1, parser.arg2)
     when :C_CALL
-      @code_writer.write_call(@parser.arg1, @parser.arg2)
+      @code_writer.write_call(parser.arg1, parser.arg2)
     when :C_RETURN
       @code_writer.write_return
     end
