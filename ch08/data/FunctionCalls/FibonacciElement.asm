@@ -66,7 +66,62 @@ D=A
 AM=M+1
 A=A-1
 M=D
-// TODO: implements call
+// call Main.fibonacci 1
+  // push returnAddress
+@Sys.init$ret.0
+D=A
+@SP
+AM=M+1
+A=A-1
+M=D
+  // push LCL
+@LCL
+D=M
+@SP
+AM=M+1
+A=A-1
+M=D
+  // push ARG
+@ARG
+D=M
+@SP
+AM=M+1
+A=A-1
+M=D
+  // push THIS
+@THIS
+D=M
+@SP
+AM=M+1
+A=A-1
+M=D
+  // push THAT
+@THAT
+D=M
+@SP
+AM=M+1
+A=A-1
+M=D
+  // ARG = SP-5-nArgs
+@SP
+D=M
+@5
+D=D-A
+@1
+D=D-A
+@ARG
+M=D
+  // LCL = SP
+@SP
+D=M
+@LCL
+M=D
+  // goto f
+@Main.fibonacci
+0;JMP
+
+(Sys.init$ret.0)
+
 (WHILE)
 @WHILE
 0;JMP
@@ -185,7 +240,62 @@ AM=M-1
 D=M
 A=A-1
 M=M-D
-// TODO: implements call
+// call Main.fibonacci 1  // computes fib(n-2)
+  // push returnAddress
+@Main.fibonacci$ret.0
+D=A
+@SP
+AM=M+1
+A=A-1
+M=D
+  // push LCL
+@LCL
+D=M
+@SP
+AM=M+1
+A=A-1
+M=D
+  // push ARG
+@ARG
+D=M
+@SP
+AM=M+1
+A=A-1
+M=D
+  // push THIS
+@THIS
+D=M
+@SP
+AM=M+1
+A=A-1
+M=D
+  // push THAT
+@THAT
+D=M
+@SP
+AM=M+1
+A=A-1
+M=D
+  // ARG = SP-5-nArgs
+@SP
+D=M
+@5
+D=D-A
+@1
+D=D-A
+@ARG
+M=D
+  // LCL = SP
+@SP
+D=M
+@LCL
+M=D
+  // goto f
+@Main.fibonacci
+0;JMP
+
+(Main.fibonacci$ret.0)
+
 @0
 D=A
 @ARG
@@ -206,7 +316,62 @@ AM=M-1
 D=M
 A=A-1
 M=M-D
-// TODO: implements call
+// call Main.fibonacci 1  // computes fib(n-1)
+  // push returnAddress
+@Main.fibonacci$ret.1
+D=A
+@SP
+AM=M+1
+A=A-1
+M=D
+  // push LCL
+@LCL
+D=M
+@SP
+AM=M+1
+A=A-1
+M=D
+  // push ARG
+@ARG
+D=M
+@SP
+AM=M+1
+A=A-1
+M=D
+  // push THIS
+@THIS
+D=M
+@SP
+AM=M+1
+A=A-1
+M=D
+  // push THAT
+@THAT
+D=M
+@SP
+AM=M+1
+A=A-1
+M=D
+  // ARG = SP-5-nArgs
+@SP
+D=M
+@5
+D=D-A
+@1
+D=D-A
+@ARG
+M=D
+  // LCL = SP
+@SP
+D=M
+@LCL
+M=D
+  // goto f
+@Main.fibonacci
+0;JMP
+
+(Main.fibonacci$ret.1)
+
 @SP
 AM=M-1
 D=M
