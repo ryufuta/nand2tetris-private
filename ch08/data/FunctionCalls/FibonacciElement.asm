@@ -1,4 +1,64 @@
-// TODO: implements bootstrap
+// bootstrap
+// SP=256
+@256
+D=A
+@SP
+M=D
+// call Sys.init
+  // push returnAddress
+@$ret.0
+D=A
+@SP
+AM=M+1
+A=A-1
+M=D
+  // push LCL
+@LCL
+D=M
+@SP
+AM=M+1
+A=A-1
+M=D
+  // push ARG
+@ARG
+D=M
+@SP
+AM=M+1
+A=A-1
+M=D
+  // push THIS
+@THIS
+D=M
+@SP
+AM=M+1
+A=A-1
+M=D
+  // push THAT
+@THAT
+D=M
+@SP
+AM=M+1
+A=A-1
+M=D
+  // ARG = SP-5-nArgs
+@SP
+D=M
+@5
+D=D-A
+@ARG
+M=D
+  // LCL = SP
+@SP
+D=M
+@LCL
+M=D
+  // goto f
+@Sys.init
+0;JMP
+
+($ret.0)
+
+// Sys.vm
 (Sys.init)
 @4
 D=A
@@ -10,6 +70,8 @@ M=D
 (WHILE)
 @WHILE
 0;JMP
+
+// Main.vm
 (Main.fibonacci)
 @0
 D=A
